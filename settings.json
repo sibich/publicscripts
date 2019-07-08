@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.shell.windows": "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "window.newWindowDimensions": "fullscreen",
+    "workbench.startupEditor": "none",
+    "update.mode": "none"
+}
