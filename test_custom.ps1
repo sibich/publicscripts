@@ -11,6 +11,4 @@ Invoke-WebRequest -Uri https://github.com/git-for-windows/git/releases/download/
 & D:\soft\git.exe /VERYSILENT
 & D:\soft\vscode.exe /VERYSILENT /NORESTART /MERGETASKS=!runcode
 #add VS Code configuration
-New-Item -path C:\Users\vitaly\AppData\Roaming\Code -ItemType Directory -Force
-New-Item -path C:\Users\vitaly\AppData\Roaming\Code\User -ItemType Directory -Force
-Invoke-WebRequest -Uri https://github.com/sibich/publicscripts/raw/master/settings.json -OutFile C:\Users\vitaly\AppData\Roaming\Code\User\settings.json -UseBasicParsing
+Invoke-WebRequest -Uri https://github.com/sibich/publicscripts/raw/master/settings.json -OutFile C:\Users\vitaly\scripts\settings.json -UseBasicParsing
