@@ -15,4 +15,5 @@ Invoke-WebRequest -Uri https://github.com/sibich/publicscripts/raw/master/settin
 # set notepad++ variable
 $PATH = [Environment]::GetEnvironmentVariable("PATH")
 $note_path = "C:\Program Files\Notepad++"
-[Environment]::SetEnvironmentVariable("PATH", "$PATH$note_path", "Machine")
+[Environment]::SetEnvironmentVariable("PATH", "$PATH;$note_path", "Machine")
+exit
