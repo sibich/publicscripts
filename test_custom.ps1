@@ -36,11 +36,16 @@ Install-Module PSWindowsUpdate -Repository PSGallery -Force -Confirm:$false
 # check installation
 Get-Module -ListAvailable | Where-Object {$_.Name -like "az*"} | Out-File -FilePath $logfile -Append
 Get-Module -ListAvailable | Where-Object {$_.Name -like "PSWindowsUpdate"} | Out-File -FilePath $logfile -Append
-git --version | Out-File $logfile -Append
-code --version | Out-File $logfile -Append
-
 Get-WUList -AcceptAll | Out-File -FilePath $logfile -Append
+$PSVersionTable.PSVersion | Out-File -FilePath $logfile -Append
+# git config
+git config --global user.name "Vitaly Sibichenkov"
+git config --global user.email "sibich.v@gmail.com"
+git config --global core.editor notepad++
+git config --global color.ui "auto"
+# install updates
 
-Get-WUInstall -MicrosoftUpdate -AcceptAll -AutoReboot -Confirm:$false
+Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false
+Get-WUInstall -MicrosoftUpdate -AcceptAll -Download -Install -AutoReboot -Confirm:$false
 
 exit
