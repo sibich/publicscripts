@@ -33,18 +33,16 @@ Install-PackageProvider NuGet -Force -Confirm:$false
 Set-PSRepository PSGallery -InstallationPolicy Trusted
 Install-Module Az -Repository PSGallery -Force -Confirm:$false
 Install-Module PSWindowsUpdate -Repository PSGallery -Force -Confirm:$false
+
 # check installation
 Get-Module -ListAvailable | Where-Object {$_.Name -like "az*"} | Out-File -FilePath $logfile -Append
 Get-Module -ListAvailable | Where-Object {$_.Name -like "PSWindowsUpdate"} | Out-File -FilePath $logfile -Append
+
+# get some data
 Get-WUList -AcceptAll | Out-File -FilePath $logfile -Append
 $PSVersionTable.PSVersion | Out-File -FilePath $logfile -Append
-# git config
-& 'C:\Program Files\Git\cmd\git.exe' config --global user.name "Vitaly Sibichenkov"
-& 'C:\Program Files\Git\cmd\git.exe' config --global user.email "sibich.v@gmail.com"
-& 'C:\Program Files\Git\cmd\git.exe' config --global core.editor notepad++
-& 'C:\Program Files\Git\cmd\git.exe' config --global color.ui "auto"
-# install updates
 
+# install updates
 Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false
 Get-WUInstall -MicrosoftUpdate -AcceptAll -Download -Install -AutoReboot -Confirm:$false
 
