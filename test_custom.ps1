@@ -39,10 +39,10 @@ Get-Module -ListAvailable | Where-Object {$_.Name -like "PSWindowsUpdate"} | Out
 Get-WUList -AcceptAll | Out-File -FilePath $logfile -Append
 $PSVersionTable.PSVersion | Out-File -FilePath $logfile -Append
 # git config
-git config --global user.name "Vitaly Sibichenkov"
-git config --global user.email "sibich.v@gmail.com"
-git config --global core.editor notepad++
-git config --global color.ui "auto"
+& 'C:\Program Files\Git\cmd\git.exe' config --global user.name "Vitaly Sibichenkov"
+& 'C:\Program Files\Git\cmd\git.exe' config --global user.email "sibich.v@gmail.com"
+& 'C:\Program Files\Git\cmd\git.exe' config --global core.editor notepad++
+& 'C:\Program Files\Git\cmd\git.exe' config --global color.ui "auto"
 # install updates
 
 Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false
