@@ -16,7 +16,7 @@ Invoke-WebRequest -Uri https://github.com/git-for-windows/git/releases/download/
 & D:\soft\note.exe /S
 & D:\soft\git.exe /VERYSILENT
 & D:\soft\vscode.exe /VERYSILENT /NORESTART /MERGETASKS=!runcode
-& "C:\Program Files\Git\cmd\git.exe" --version | Out-File $logfile -Append
+
 Get-ChildItem 'C:\Program Files\Notepad++\' -Name notepad++.exe | Out-File $logfile -Append
 Get-ChildItem "C:\Program Files\Microsoft VS Code\" -Name Code.exe | Out-File $logfile -Append
 
@@ -33,9 +33,14 @@ Install-PackageProvider NuGet -Force -Confirm:$false
 Set-PSRepository PSGallery -InstallationPolicy Trusted
 Install-Module Az -Repository PSGallery -Force -Confirm:$false
 Install-Module PSWindowsUpdate -Repository PSGallery -Force -Confirm:$false
+# check installation
 Get-Module -ListAvailable | Where-Object {$_.Name -like "az*"} | Out-File -FilePath $logfile -Append
 Get-Module -ListAvailable | Where-Object {$_.Name -like "PSWindowsUpdate"} | Out-File -FilePath $logfile -Append
+git --version | Out-File $logfile -Append
+code --version | Out-File $logfile -Append
+
 Get-WUList -AcceptAll | Out-File -FilePath $logfile -Append
-#Get-WUInstall -MicrosoftUpdate -AcceptAll -AutoReboot -Confirm:$false
+
+Get-WUInstall -MicrosoftUpdate -AcceptAll -AutoReboot -Confirm:$false
 
 exit
