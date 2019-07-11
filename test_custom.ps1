@@ -16,9 +16,14 @@ Invoke-WebRequest -Uri https://github.com/sibich/publicscripts/raw/master/settin
 $PATH = [Environment]::GetEnvironmentVariable("PATH")
 $note_path = "C:\Program Files\Notepad++"
 [Environment]::SetEnvironmentVariable("PATH", "$PATH;$note_path", "Machine")
+# test
 $comp = $env:COMPUTERNAME
-Invoke-Command -ComputerName $comp -ScriptBlock {
-    New-Item -name D:\scripts\test.txt -ItemType File -Force -Value "test"
-    #Install-Module -Name Az -Force -AllowClobber
-}
+New-Item -name D:\scripts\test.txt -ItemType File -Value $comp
+# install modules
+Install-PackageProvider NuGet -Force -Confirm:$false
+Set-PSRepository PSGallery -InstallationPolicy Trusted
+Install-Module Az -Repository PSGallery -Force -Confirm:$false
+Install-Module PSWindowsUpdate -Repository PSGallery -Force -Confirm:$false
+Get-Module -ListAvailable | Where-Object {$_.Name -like "az*"} | Out-File -FilePath D:\scripts\test.txt -Append
+Get-Module -ListAvailable | Where-Object {$_.Name -like "PSWindowsUpdate"} | Out-File -FilePath D:\scripts\test.txt -Append
 exit
