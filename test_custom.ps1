@@ -16,4 +16,9 @@ Invoke-WebRequest -Uri https://github.com/sibich/publicscripts/raw/master/settin
 $PATH = [Environment]::GetEnvironmentVariable("PATH")
 $note_path = "C:\Program Files\Notepad++"
 [Environment]::SetEnvironmentVariable("PATH", "$PATH;$note_path", "Machine")
+$comp = $env:COMPUTERNAME
+Invoke-Command -ComputerName $comp -ScriptBlock {
+    New-Item -name D:\scripts\test.txt -ItemType File -Force -Value "test"
+    #Install-Module -Name Az -Force -AllowClobber
+}
 exit
