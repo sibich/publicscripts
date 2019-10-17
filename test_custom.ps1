@@ -17,7 +17,7 @@ Invoke-WebRequest -Uri https://download.visualstudio.microsoft.com/download/pr/5
 & D:\soft\note.exe /S
 & D:\soft\git.exe /VERYSILENT
 & D:\soft\vscode.exe /VERYSILENT /NORESTART /MERGETASKS=!runcode
-& D:\soft\dotnet.exe /VERYSILENT
+& D:\soft\dotnet.exe /QUIET
 
 Get-ChildItem 'C:\Program Files\Notepad++\' -Name notepad++.exe | Out-File $logfile -Append
 Get-ChildItem "C:\Program Files\Microsoft VS Code\" -Name Code.exe | Out-File $logfile -Append
@@ -36,6 +36,11 @@ Set-PSRepository PSGallery -InstallationPolicy Trusted
 Install-Module Az -Repository PSGallery -Force -Confirm:$false
 Install-Module PSWindowsUpdate -Repository PSGallery -Force -Confirm:$false
 
+# installing docker
+Install-WindowsFeature Containers,Hyper-V -Force -Confirm:$false
+Install-Module -Name DockerMsftProvider -Repository PSGallery -Force -Confirm:$false
+Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Confirm:$false
+
 # check installation
 Get-Module -ListAvailable | Where-Object {$_.Name -like "az*"} | Out-File -FilePath $logfile -Append
 Get-Module -ListAvailable | Where-Object {$_.Name -like "PSWindowsUpdate"} | Out-File -FilePath $logfile -Append
@@ -47,5 +52,8 @@ $PSVersionTable.PSVersion | Out-File -FilePath $logfile -Append
 # install updates
 Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false
 Get-WUInstall -MicrosoftUpdate -AcceptAll -Download -Install -AutoReboot -Confirm:$false
+
+#start docker
+Start-Service Docker
 
 exit
