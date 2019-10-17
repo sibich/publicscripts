@@ -8,15 +8,16 @@ New-Item -path D:\repos -ItemType Directory -Force
 Get-ChildItem -Path "D:\" | Out-File $logfile
 
 # download soft
-Invoke-WebRequest -Uri https://notepad-plus-plus.org/repository/7.x/7.7.1/npp.7.7.1.Installer.x64.exe -OutFile D:\soft\note.exe -UseBasicParsing
+Invoke-WebRequest -Uri http://download.notepad-plus-plus.org/repository/7.x/7.8/npp.7.8.Installer.x64.exe -OutFile D:\soft\note.exe -UseBasicParsing
 Invoke-WebRequest -Uri http://az764295.vo.msecnd.net/stable/c7d83e57cd18f18026a8162d042843bda1bcf21f/VSCodeSetup-x64-1.35.1.exe -OutFile  D:\soft\vscode.exe -UseBasicParsing
-#Invoke-WebRequest -Uri https://vscode-update.azurewebsites.net/latest/win32-x64/stable -OutFile  D:\soft\vscode.exe -UseBasicParsing
-Invoke-WebRequest -Uri https://github.com/git-for-windows/git/releases/download/v2.22.0.windows.1/Git-2.22.0-64-bit.exe -OutFile D:\soft\git.exe -UseBasicParsing
+Invoke-WebRequest -Uri https://github.com/git-for-windows/git/releases/download/v2.23.0.windows.1/Git-2.23.0-64-bit.exe -OutFile D:\soft\git.exe -UseBasicParsing
+Invoke-WebRequest -Uri https://download.visualstudio.microsoft.com/download/pr/53f250a1-318f-4350-8bda-3c6e49f40e76/e8cbbd98b08edd6222125268166cfc43/dotnet-sdk-3.0.100-win-x64.exe -OutFile D:\soft\dotnet.exe -UseBasicParsing
 
 # install soft
 & D:\soft\note.exe /S
 & D:\soft\git.exe /VERYSILENT
 & D:\soft\vscode.exe /VERYSILENT /NORESTART /MERGETASKS=!runcode
+& D:\soft\dotnet.exe /VERYSILENT
 
 Get-ChildItem 'C:\Program Files\Notepad++\' -Name notepad++.exe | Out-File $logfile -Append
 Get-ChildItem "C:\Program Files\Microsoft VS Code\" -Name Code.exe | Out-File $logfile -Append
