@@ -37,7 +37,8 @@ Install-Module Az -Repository PSGallery -Force -Confirm:$false
 Install-Module PSWindowsUpdate -Repository PSGallery -Force -Confirm:$false
 
 # installing docker
-Install-WindowsFeature Containers,Hyper-V -Force -Confirm:$false
+Install-WindowsFeature Hyper-V -Force -Confirm:$false
+Install-WindowsFeature Containers -Force -Confirm:$false
 Install-Module -Name DockerMsftProvider -Repository PSGallery -Force -Confirm:$false
 Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Confirm:$false
 
@@ -49,11 +50,27 @@ Get-Module -ListAvailable | Where-Object {$_.Name -like "PSWindowsUpdate"} | Out
 Get-WUList -AcceptAll | Out-File -FilePath $logfile -Append
 $PSVersionTable.PSVersion | Out-File -FilePath $logfile -Append
 
-# install updates
-Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false
-Get-WUInstall -MicrosoftUpdate -AcceptAll -Download -Install -AutoReboot -Confirm:$false
+# initialize data disk
+$disks = Get-Disk | Where partitionstyle -eq 'raw' | sort number
+
+    $letters = 70..89 | ForEach-Object { [char]$_ }
+    $count = 0
+    $labels = "data1","data2"
+
+    foreach ($disk in $disks) {
+        $driveLetter = $letters[$count].ToString()
+        $disk | 
+        Initialize-Disk -PartitionStyle MBR -PassThru |
+        New-Partition -UseMaximumSize -DriveLetter $driveLetter |
+        Format-Volume -FileSystem NTFS -NewFileSystemLabel $labels[$count] -Confirm:$false -Force
+	$count++
+    }
 
 #start docker
 Start-Service Docker
+
+# install updates
+Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false
+Get-WUInstall -MicrosoftUpdate -AcceptAll -Download -Install -AutoReboot -Confirm:$false
 
 exit
