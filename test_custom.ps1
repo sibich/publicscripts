@@ -18,13 +18,14 @@ Invoke-WebRequest -Uri https://download.visualstudio.microsoft.com/download/pr/5
 & D:\soft\git.exe /VERYSILENT
 & D:\soft\vscode.exe /VERYSILENT /NORESTART /MERGETASKS=!runcode
 & D:\soft\dotnet.exe /QUIET
-
+start-sleep -Seconds 300
 Get-ChildItem 'C:\Program Files\Notepad++\' -Name notepad++.exe | Out-File $logfile -Append
 Get-ChildItem "C:\Program Files\Microsoft VS Code\" -Name Code.exe | Out-File $logfile -Append
 Get-ChildItem "C:\Program Files\Git\bin\" -Name git.exe | Out-File $logfile -Append
+Get-ChildItem "C:\Program Files\dotnet\" -Name dotnet.exe | Out-File $logfile -Append
 
 #add VS Code configuration
-Invoke-WebRequest -Uri https://github.com/sibich/publicscripts/raw/master/settings.json -OutFile D:\scripts\settings.json -UseBasicParsing
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/sibich/publicscripts/master/settings.json -OutFile D:\scripts\settings.json -UseBasicParsing
 
 # set notepad++ variable
 $PATH = [Environment]::GetEnvironmentVariable("PATH")
@@ -40,11 +41,16 @@ Install-Module PSWindowsUpdate -Repository PSGallery -Force -Confirm:$false
 # installing docker
 Install-WindowsFeature Hyper-V -Force -Confirm:$false
 Install-WindowsFeature Containers -Force -Confirm:$false
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -norestart
 Install-Module -Name DockerMsftProvider -Repository PSGallery -Force -Confirm:$false
 Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Confirm:$false
 
+start-sleep -Seconds 300
+Get-WindowsFeature -Name containers | Out-File $logfile -Append
+Get-WindowsFeature -Name Hyper-V | Out-File $logfile -Append
+
 # copy docker config file
-Invoke-WebRequest -Uri https://github.com/sibich/publicscripts/raw/master/daemon.json -OutFile C:\Programdata\docker\config\daemon.json -UseBasicParsing
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/sibich/publicscripts/master/daemon.json -OutFile C:\Programdata\docker\config\daemon.json -UseBasicParsing
 
 # check installation
 Get-Module -ListAvailable | Where-Object {$_.Name -like "az*"} | Out-File -FilePath $logfile -Append
