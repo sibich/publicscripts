@@ -21,6 +21,7 @@ Invoke-WebRequest -Uri https://download.visualstudio.microsoft.com/download/pr/5
 
 Get-ChildItem 'C:\Program Files\Notepad++\' -Name notepad++.exe | Out-File $logfile -Append
 Get-ChildItem "C:\Program Files\Microsoft VS Code\" -Name Code.exe | Out-File $logfile -Append
+Get-ChildItem "C:\Program Files\Git\bin\" -Name git.exe | Out-File $logfile -Append
 
 #add VS Code configuration
 Invoke-WebRequest -Uri https://github.com/sibich/publicscripts/raw/master/settings.json -OutFile D:\scripts\settings.json -UseBasicParsing
@@ -41,6 +42,9 @@ Install-WindowsFeature Hyper-V -Force -Confirm:$false
 Install-WindowsFeature Containers -Force -Confirm:$false
 Install-Module -Name DockerMsftProvider -Repository PSGallery -Force -Confirm:$false
 Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Confirm:$false
+
+# copy docker config file
+Invoke-WebRequest -Uri https://github.com/sibich/publicscripts/raw/master/daemon.json -OutFile C:\Programdata\docker\config\daemon.json -UseBasicParsing
 
 # check installation
 Get-Module -ListAvailable | Where-Object {$_.Name -like "az*"} | Out-File -FilePath $logfile -Append
@@ -67,7 +71,7 @@ $disks = Get-Disk | Where partitionstyle -eq 'raw' | sort number
     }
 
 #start docker
-Start-Service Docker
+restart-Service Docker
 
 # install updates
 Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false
