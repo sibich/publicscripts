@@ -48,8 +48,10 @@ Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Confirm:$f
 start-sleep -Seconds 300
 Get-WindowsFeature -Name containers | Out-File $logfile -Append
 Get-WindowsFeature -Name Hyper-V | Out-File $logfile -Append
+& "C:\Program Files\docker\docker.exe version
 
 # copy docker config file
+Get-ChildItem "C:\Programdata\docker\config\" | Out-File $logfile -Append
 Invoke-WebRequest -Uri https://raw.githubusercontent.com/sibich/publicscripts/master/daemon.json -OutFile C:\Programdata\docker\config\daemon.json -UseBasicParsing
 
 # check installation
@@ -82,5 +84,7 @@ restart-Service Docker
 # install updates
 Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false
 Get-WUInstall -MicrosoftUpdate -AcceptAll -Download -Install -AutoReboot -Confirm:$false
+
+
 
 exit
