@@ -5,7 +5,8 @@ write-output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Configuration was started" |
 new-item -path D:\soft -ItemType directory -Force
 New-Item -path D:\scripts -ItemType Directory -Force
 New-Item -path D:\repos -ItemType Directory -Force
-Get-ChildItem -Path "D:\" | Out-File -FilePath $logfile -Append
+write-output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Folders were created:" | Out-File -FilePath $logfile -Append
+Get-ChildItem -Path "D:\" -directory | Out-File -FilePath $logfile -Append
 
 # download soft
 Invoke-WebRequest -Uri http://download.notepad-plus-plus.org/repository/7.x/7.8/npp.7.8.Installer.x64.exe -OutFile D:\soft\note.exe -UseBasicParsing
@@ -57,7 +58,6 @@ Get-Module -ListAvailable | Where-Object {$_.Name -like "az*"} | Out-File -FileP
 Get-Module -ListAvailable | Where-Object {$_.Name -like "PSWindowsUpdate"} | Out-File -FilePath $logfile -Append
 
 # copy docker config file
-Get-ChildItem -Path "C:\Programdata\" | Out-File $logfile -Append
 Invoke-WebRequest -Uri https://raw.githubusercontent.com/sibich/publicscripts/master/daemon.json -OutFile D:\scripts\daemon.json -UseBasicParsing
 
 # get some data
@@ -84,7 +84,7 @@ $disks = Get-Disk | Where-Object partitionstyle -eq 'raw' | Sort-Object number
 restart-Service Docker
 
 Get-ChildItem -Path "C:\Programdata\" | Out-File $logfile -Append
-
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/sibich/publicscripts/master/daemon.json -OutFile C:\Programdata\docker\config\daemon.json -UseBasicParsing
 
 # install updates
 Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false
