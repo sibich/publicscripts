@@ -1,11 +1,11 @@
 ﻿# log file
 $logfile = "D:\setup.log"
-write-output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Configuration was started" | Out-File -FilePath $logfile -Append
+write-output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Configuration was started" | Out-File -FilePath $logfile
 # create new folders
 new-item -path D:\soft -ItemType directory -Force
 New-Item -path D:\scripts -ItemType Directory -Force
 New-Item -path D:\repos -ItemType Directory -Force
-Get-ChildItem -Path "D:\" | Out-File $logfile
+Get-ChildItem -Path "D:\" | Out-File -FilePath $logfile -Append
 
 # download soft
 Invoke-WebRequest -Uri http://download.notepad-plus-plus.org/repository/7.x/7.8/npp.7.8.Installer.x64.exe -OutFile D:\soft\note.exe -UseBasicParsing
@@ -19,6 +19,7 @@ Invoke-WebRequest -Uri https://download.visualstudio.microsoft.com/download/pr/5
 & D:\soft\vscode.exe /VERYSILENT /NORESTART /MERGETASKS=!runcode
 & D:\soft\dotnet.exe /QUIET
 start-sleep -Seconds 240
+write-output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Software was installed:" | Out-File -FilePath $logfile -Append
 Get-ChildItem 'C:\Program Files\Notepad++\' -Name notepad++.exe | Out-File $logfile -Append
 Get-ChildItem "C:\Program Files\Microsoft VS Code\" -Name Code.exe | Out-File $logfile -Append
 Get-ChildItem "C:\Program Files\Git\bin\" -Name git.exe | Out-File $logfile -Append
@@ -48,17 +49,15 @@ Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Confirm:$f
 start-sleep -Seconds 240
 
 # check installation
+write-output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Modules and features were installed:" | Out-File -FilePath $logfile -Append
 Get-WindowsFeature -Name containers | Out-File $logfile -Append
 Get-WindowsFeature -Name Hyper-V | Out-File $logfile -Append
 Get-Package -Name docker | Out-File $logfile -Append
-docker version
-
 Get-Module -ListAvailable | Where-Object {$_.Name -like "az*"} | Out-File -FilePath $logfile -Append
 Get-Module -ListAvailable | Where-Object {$_.Name -like "PSWindowsUpdate"} | Out-File -FilePath $logfile -Append
 
 # copy docker config file
-Get-ChildItem -Path "C:\Programdata\docker\config\" | Out-File $logfile -Append
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/sibich/publicscripts/master/daemon.json -OutFile C:\Programdata\docker\config\daemon.json -UseBasicParsing
+Get-ChildItem -Path "C:\Programdata\" | Out-File $logfile -Append
 Invoke-WebRequest -Uri https://raw.githubusercontent.com/sibich/publicscripts/master/daemon.json -OutFile D:\scripts\daemon.json -UseBasicParsing
 
 # get some data
@@ -90,4 +89,6 @@ Get-WUInstall -MicrosoftUpdate -AcceptAll -Download -Install -AutoReboot -Confir
 
 Write-Output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Configuration was completed" | Out-File -FilePath $logfile -Append
 Restart-Computer -force -AsJob -Confirm:$false
+Start-Sleep 120
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/sibich/publicscripts/master/daemon.json -OutFile C:\Programdata\docker\config\daemon.json -UseBasicParsing
 exit
