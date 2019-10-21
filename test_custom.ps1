@@ -83,8 +83,11 @@ $disks = Get-Disk | Where-Object partitionstyle -eq 'raw' | Sort-Object number
 #start docker
 restart-Service Docker
 
-Get-ChildItem -Path "C:\Programdata\" | Out-File $logfile -Append
+Get-ChildItem -Path "C:\Programdata\docker\" | Out-File $logfile -Append
+start-sleep -Seconds 120
+Get-ChildItem -Path "C:\Programdata\docker\" | Out-File $logfile -Append
 Invoke-WebRequest -Uri https://raw.githubusercontent.com/sibich/publicscripts/master/daemon.json -OutFile C:\Programdata\docker\config\daemon.json -UseBasicParsing
+
 
 # install updates
 Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false
