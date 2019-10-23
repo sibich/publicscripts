@@ -20,10 +20,14 @@ Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile D:\soft\Az
 & D:\soft\note.exe /S
 & D:\soft\git.exe /VERYSILENT
 & D:\soft\vscode.exe /VERYSILENT /NORESTART /MERGETASKS=!runcode
+
+start-sleep -Seconds 240
+
 & D:\soft\dotnet.exe /QUIET
 Start-Process msiexec.exe -Wait -ArgumentList '/I D:\soft\AzureCLI.msi /quiet'
-# & D:\soft\AzureCLI.msi /QUIET
-start-sleep -Seconds 480
+
+start-sleep -Seconds 300
+
 write-output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Software was installed:" | Out-File -FilePath $logfile -Append
 Get-ChildItem 'C:\Program Files\Notepad++\' -Name notepad++.exe | Out-File $logfile -Append
 Get-ChildItem "C:\Program Files\Microsoft VS Code\" -Name Code.exe | Out-File $logfile -Append
