@@ -22,7 +22,7 @@ Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile D:\soft\Az
 & D:\soft\vscode.exe /VERYSILENT /NORESTART /MERGETASKS=!runcode
 & D:\soft\dotnet.exe /QUIET
 
-start-sleep -Seconds 300
+start-sleep -Seconds 360
 
 Start-Process msiexec.exe -Wait -ArgumentList '/I D:\soft\AzureCLI.msi /quiet'
 Start-Sleep -Seconds 120
@@ -42,10 +42,11 @@ $PATH = [Environment]::GetEnvironmentVariable("PATH")
 $note_path = "C:\Program Files\Notepad++"
 $dotnet_path = "C:\Program Files\dotnet"
 $git_path = "C:\Program Files\Git\bin"
+$code_path = "C:\Program Files\Microsoft VS Code"
 $az_path = "C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
-[Environment]::SetEnvironmentVariable("PATH", "$PATH;$note_path;$git_path;$az_path;$dotnet_path", "Machine")
+[Environment]::SetEnvironmentVariable("PATH", "$PATH;$note_path;$git_path;$az_path;$dotnet_path;$code_path", "Machine")
 $PATH = [Environment]::GetEnvironmentVariable("PATH")
-$PATH
+Write-Output $PATH
 
 # install modules
 Install-PackageProvider NuGet -Force -Confirm:$false
