@@ -40,10 +40,12 @@ Invoke-WebRequest -Uri https://raw.githubusercontent.com/sibich/publicscripts/ma
 # set notepad++ variable
 $PATH = [Environment]::GetEnvironmentVariable("PATH")
 $note_path = "C:\Program Files\Notepad++"
+$dotnet_path = "C:\Program Files\dotnet"
 $git_path = "C:\Program Files\Git\bin"
 $az_path = "C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
-[Environment]::SetEnvironmentVariable("PATH", "$PATH;$note_path;$git_path;$az_path", "Machine")
-# set az variable c:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin> and git variable c:\Program Files\Git\bin\
+[Environment]::SetEnvironmentVariable("PATH", "$PATH;$note_path;$git_path;$az_path;$dotnet_path", "Machine")
+$PATH = [Environment]::GetEnvironmentVariable("PATH")
+$PATH
 
 # install modules
 Install-PackageProvider NuGet -Force -Confirm:$false
