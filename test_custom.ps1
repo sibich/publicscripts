@@ -22,10 +22,10 @@ Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile D:\soft\Az
 & D:\soft\vscode.exe /VERYSILENT /NORESTART /MERGETASKS=!runcode
 & D:\soft\dotnet.exe /QUIET
 
-start-sleep -Seconds 360
+start-sleep -Seconds 240
 
 Start-Process msiexec.exe -Wait -ArgumentList '/I D:\soft\AzureCLI.msi /quiet'
-Start-Sleep -Seconds 120
+Start-Sleep -Seconds 60
 
 write-output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Software was installed:" | Out-File -FilePath $logfile -Append
 Get-ChildItem 'C:\Program Files\Notepad++\' -Name notepad++.exe | Out-File $logfile -Append
@@ -45,8 +45,6 @@ $git_path = "C:\Program Files\Git\bin"
 $code_path = "C:\Program Files\Microsoft VS Code"
 $az_path = "C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
 [Environment]::SetEnvironmentVariable("PATH", "$PATH;$note_path;$git_path;$az_path;$dotnet_path;$code_path", "Machine")
-$PATH = [Environment]::GetEnvironmentVariable("PATH")
-Write-Output $PATH
 
 # install modules
 Install-PackageProvider NuGet -Force -Confirm:$false
@@ -61,7 +59,7 @@ Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -nores
 Install-Module -Name DockerMsftProvider -Repository PSGallery -Force -Confirm:$false
 Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Confirm:$false
 
-start-sleep -Seconds 240
+start-sleep -Seconds 120
 
 # check installation
 write-output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Modules and features were installed:" | Out-File -FilePath $logfile -Append
