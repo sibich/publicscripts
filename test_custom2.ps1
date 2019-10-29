@@ -50,21 +50,13 @@ $az_path = "C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
 Install-PackageProvider NuGet -Force -Confirm:$false
 Set-PSRepository PSGallery -InstallationPolicy Trusted
 Install-Module AzureRM -Repository PSGallery -Force -Confirm:$false
-Install-Module PSWindowsUpdate -Repository PSGallery -Force -Confirm:$false
 
 # check installation
 write-output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Modules and features were installed:" | Out-File -FilePath $logfile -Append
 Get-Module -ListAvailable | Where-Object {$_.Name -like "az*"} | Out-File -FilePath $logfile -Append
-Get-Module -ListAvailable | Where-Object {$_.Name -like "PSWindowsUpdate"} | Out-File -FilePath $logfile -Append
 
 # get some data
-Get-WUList -AcceptAll | Out-File -FilePath $logfile -Append
 $PSVersionTable.PSVersion | Out-File -FilePath $logfile -Append
 
-# install updates
-Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7 -Confirm:$false
-Get-WUInstall -MicrosoftUpdate -AcceptAll -Download -Install -AutoReboot -Confirm:$false
-
 Write-Output (get-date -Format yyyy-MM-dd-hh-mm-ss)"Configuration was completed" | Out-File -FilePath $logfile -Append
-Restart-Computer -force -AsJob -Confirm:$false
 exit
