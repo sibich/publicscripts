@@ -1,3 +1,5 @@
 #!/bin/bash
 
-echo 'hello from ARM' > /home/vitaly/test.txt
+user=$(whoami)
+echo "Hello $user from ARM" > /home/vitaly/test_`date +%d-%m-%Y"_"%H_%M_%S`.txt
+
