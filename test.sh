@@ -20,15 +20,13 @@ apt-get install -y docker-ce docker-ce-cli containerd.io
 dockerver=$(docker --version)
 echo "Docker version is $dockerver" > /home/vitaly/setup.log
 
-#install k8
+#install k8s
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 sleep 10s
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
 apt-get update
-apt-get install -y kubectl kubeadm kubelet
-apt-mark hold kubelet kubeadm kubectl
+apt-get install -y kubeadm kubelet
+apt-mark hold kubelet kubeadm
 
 kubeadmver=$(kubeadm version)
-kubectlver=$(kubectl version)
 echo "Kubeadm version is $kubeadmver" >> /home/vitaly/setup.log
-echo "Kubectl version is $kubectlver" >> /home/vitaly/setup.log
