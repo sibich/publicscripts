@@ -30,3 +30,13 @@ apt-mark hold kubelet kubeadm
 
 kubeadmver=$(kubeadm version)
 echo "Kubeadm version is $kubeadmver" >> /home/vitaly/setup.log
+
+bash -c 'cat << EOF > /etc/docker/daemon.json
+{
+   "exec-opts": ["native.cgroupdriver=systemd"]
+}
+EOF'
+
+systemctl restart docker
+
+sudo -u vitaly mkdir -p /home/vitaly/.kube
