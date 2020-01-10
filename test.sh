@@ -44,3 +44,4 @@ EOF'
 systemctl restart docker
 
 sudo -u vitaly mkdir -p /home/vitaly/.kube
+sudo -u vitaly echo "source <(kubectl completion bash)" >> /home/vitaly/.bashrc
