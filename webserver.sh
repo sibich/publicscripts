@@ -21,5 +21,5 @@ echo "deb http://nginx.org/packages/debian/ buster nginx" > /etc/apt/sources.lis
 echo "deb-src http://nginx.org/packages/debian/ buster nginx" >> /etc/apt/sources.list.d/nginx.list
 apt-get update
 apt-get install -y nginx
-sed -i -e 's/        keepalive_timeout 65;/        keepalive_timeout 2;/g' /etc/nginx/nginx.conf
+sed -i -e 's/keepalive_timeout 65;/keepalive_timeout 2;/g' /etc/nginx/nginx.conf
 systemctl start nginx
