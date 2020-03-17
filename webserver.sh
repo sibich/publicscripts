@@ -17,9 +17,16 @@ echo "Curl version is $curlver" >> /home/vitaly/webserver_setup.log
 apt-get install -y gnupg gnupg1 gnupg2
 wget http://nginx.org/keys/nginx_signing.key
 apt-key add nginx_signing.key
+wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
 echo "deb http://nginx.org/packages/debian/ buster nginx" > /etc/apt/sources.list.d/nginx.list
 echo "deb-src http://nginx.org/packages/debian/ buster nginx" >> /etc/apt/sources.list.d/nginx.list
 apt-get update
 apt-get install -y nginx
-sed -i -e 's/keepalive_timeout 65;/keepalive_timeout 2;/g' /etc/nginx/nginx.conf
+apt-get install -y php7.2 php-pear php7.2-pgsql php7.2-gd php7.2-fpm php7.2-cli php7.2-dom php7.2-xml
+
+#install php7
+wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+
 systemctl start nginx
