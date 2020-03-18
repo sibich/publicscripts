@@ -1,5 +1,5 @@
 #!/bin/bash
-#modified 17.03
+#modified 18.03
 user=$(whoami)
 folder=$(pwd)
 date=$(date +%d-%m-%Y" "%H:%M:%S)
@@ -8,7 +8,7 @@ echo "Current user is $user, working in $folder folder" >> /home/vitaly/webserve
 #prerequisites
 apt-get update
 apt-get upgrade -y
-apt-get install -y curl lsb-release apt-transport-https ca-certificates
+apt-get install -y curl lsb-release apt-transport-https ca-certificates dialog
 
 curlver=$(curl --version)
 echo "Curl version is $curlver" >> /home/vitaly/webserver_setup.log
