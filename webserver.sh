@@ -23,9 +23,8 @@ echo "deb http://nginx.org/packages/debian/ buster nginx" > /etc/apt/sources.lis
 echo "deb-src http://nginx.org/packages/debian/ buster nginx" >> /etc/apt/sources.list.d/nginx.list
 apt-get update
 apt-get install -y nginx
-apt-get install -y php7.2 php-pear php7.2-pgsql php7.2-gd php7.2-fpm php7.2-cli php7.2-dom php7.2-xml
 
-#install php7
+#install php7 key and source list
 wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
 
