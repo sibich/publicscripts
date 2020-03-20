@@ -10,9 +10,9 @@ Get-ChildItem -Path "D:\" -directory | Out-File -FilePath $logfile -Append
 
 # download soft
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-Invoke-WebRequest -Uri http://download.notepad-plus-plus.org/repository/7.x/7.8.2/npp.7.8.2.Installer.x64.exe -OutFile D:\soft\note.exe -UseBasicParsing
+Invoke-WebRequest -Uri https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v7.8.5/npp.7.8.5.Installer.x64.exe -OutFile D:\soft\note.exe -UseBasicParsing
 Invoke-WebRequest -Uri http://az764295.vo.msecnd.net/stable/c7d83e57cd18f18026a8162d042843bda1bcf21f/VSCodeSetup-x64-1.35.1.exe -OutFile  D:\soft\vscode.exe -UseBasicParsing
-Invoke-WebRequest -Uri https://github.com/git-for-windows/git/releases/download/v2.23.0.windows.1/Git-2.23.0-64-bit.exe -OutFile D:\soft\git.exe -UseBasicParsing
+Invoke-WebRequest -Uri https://github.com/git-for-windows/git/releases/download/v2.25.1.windows.1/Git-2.25.1-64-bit.exe -OutFile D:\soft\git.exe -UseBasicParsing
 Invoke-WebRequest -Uri https://download.visualstudio.microsoft.com/download/pr/53f250a1-318f-4350-8bda-3c6e49f40e76/e8cbbd98b08edd6222125268166cfc43/dotnet-sdk-3.0.100-win-x64.exe -OutFile D:\soft\dotnet.exe -UseBasicParsing
 Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile D:\soft\AzureCLI.msi -UseBasicParsing
 
