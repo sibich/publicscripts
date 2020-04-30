@@ -41,16 +41,26 @@ bash -c 'cat << EOF > /etc/docker/daemon.json
 }
 EOF'
 
+#some variables
+POD_NETWORK_CIDR="10.244.0.0/16"
+APISERVER_ADVERTISE_ADDRESS="172.16.1.1"
+SERVICE_CIDR="10.96.0.0/12"
+
 systemctl restart docker
 sudo -u vitaly echo "source <(kubectl completion bash)" >> /home/vitaly/.bashrc
 # initialize master node (only for master nodes)
 sudo -u vitaly mkdir -p /home/vitaly/.kube
-kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=172.16.1.1 >> /home/vitaly/kube_setup.log 2>&1
+kubeadm init --pod-network-cidr=$POD_NETWORK_CIDR --apiserver-advertise-address=$APISERVER_ADVERTISE_ADDRESS --service-cidr=$SERVICE_CIDR >> /home/vitaly/kube_setup.log 2>&1
 cp -i /etc/kubernetes/admin.conf /home/vitaly/.kube/config
 chown vitaly:vitaly /home/vitaly/.kube/config
-sudo -u vitaly kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+#setup flannel modified for windows nodes
+wget https://raw.githubusercontent.com/sibich/publicscripts/master/kube-flannel.yml
+sudo -u vitaly kubectl apply -f kube-flannel.yml
 sleep 30
-sudo -u vitaly kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
+
+
+sudo -u vitaly kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
 sleep 30
 sudo -u vitaly kubectl create serviceaccount dashboard-admin-sa
 sudo -u vitaly kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa

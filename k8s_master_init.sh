@@ -1,5 +1,6 @@
 #!/bin/bash
-#modified 17.01
+#Initial master configuration: network configuration, dhcp server, iptables
+#modified 30.04
 user=$(whoami)
 folder=$(pwd)
 date=$(date +%d-%m-%Y" "%H:%M:%S)
@@ -39,7 +40,7 @@ sed -i -e 's/INTERFACESv4=""/INTERFACESv4="eth1"/g' /etc/default/isc-dhcp-server
 sed -i -e 's/INTERFACESv6=""/#####/g' /etc/default/isc-dhcp-server
 
 sed -i -e 's/option domain-name "example.org";/option domain-name "cluster.home";/g' /etc/dhcp/dhcpd.conf
-sed -i -e 's/option domain-name-servers ns1.example.org, ns2.example.org;/option domain-name-servers 8.8.4.4, 8.8.8.8;/g' /etc/dhcp/dhcpd.conf
+sed -i -e 's/option domain-name-servers ns1.example.org, ns2.example.org;/option domain-name-servers 193.41.60.1, 193.41.60.2;/g' /etc/dhcp/dhcpd.conf
 sed -i -e 's/default-lease-time 600;/default-lease-time 3600;/g' /etc/dhcp/dhcpd.conf
 sed -i -e 's/#authoritative;/authoritative;/g' /etc/dhcp/dhcpd.conf
 sed -i -e 's/#log-facility local7;/log-facility local7;/g' /etc/dhcp/dhcpd.conf
@@ -47,7 +48,8 @@ sed -i -e 's/#log-facility local7;/log-facility local7;/g' /etc/dhcp/dhcpd.conf
 bash -c 'cat << EOF >> /etc/dhcp/dhcpd.conf
 subnet 172.16.1.0 netmask 255.255.255.0 {
 	range 172.16.1.20 172.16.1.30;
-	option domain-name-servers 8.8.4.4, 8.8.8.8;
+	option domain-name "cluster.home";
+	option domain-name-servers 193.41.60.1, 193.41.60.2, 8.8.8.8;
 	option routers 172.16.1.1;
 	option broadcast-address 172.16.1.255;
 	default-lease-time 3600;
@@ -63,9 +65,16 @@ iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 iptables -A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
 
+# set iptables for Flannel
+modprobe br_netfilter
+sysctl net.bridge.bridge-nf-call-iptables=1
+echo "net.bridge.bridge-nf-call-iptables=1" >> /etc/sysctl.conf
+sysctl net.bridge.bridge-nf-call-iptables >> /home/vitaly/router_setup.log
+
 echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
 
 apt-get -y install iptables-persistent
 
 cat /etc/iptables/rules.v4 >> /home/vitaly/router_setup.log
+
