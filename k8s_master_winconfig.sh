@@ -14,6 +14,9 @@ apt-get install -y apt-transport-https curl ca-certificates gnupg2 software-prop
 swapoff -a
 sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
+#enable bridge-netfilter
+modprobe br_netfilter
+
 #install docker
 curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 sleep 10s
@@ -55,8 +58,12 @@ cp -i /etc/kubernetes/admin.conf /home/vitaly/.kube/config
 chown vitaly:vitaly /home/vitaly/.kube/config
 
 #setup flannel modified for windows nodes
-wget https://raw.githubusercontent.com/sibich/publicscripts/master/kube-flannel.yaml
+wget https://raw.githubusercontent.com/sibich/publicscripts/master/kube-flannel.yml
 sudo -u vitaly kubectl apply -f kube-flannel.yaml
+sleep 30
+sudo -u vitaly curl -L https://github.com/kubernetes-sigs/sig-windows-tools/releases/latest/download/kube-proxy.yml | sed 's/VERSION/v1.18.0/g' | kubectl apply -f -
+sleep 30
+sudo -u vitaly kubectl apply -f https://github.com/kubernetes-sigs/sig-windows-tools/releases/latest/download/flannel-overlay.yml
 sleep 30
 
 sudo -u vitaly kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
