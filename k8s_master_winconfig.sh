@@ -59,12 +59,22 @@ chown vitaly:vitaly /home/vitaly/.kube/config
 
 #setup flannel modified for windows nodes
 wget https://raw.githubusercontent.com/sibich/publicscripts/master/kube-flannel.yml
-sudo -u vitaly kubectl apply -f kube-flannel.yaml
-sleep 30
-sudo -u vitaly curl -L https://github.com/kubernetes-sigs/sig-windows-tools/releases/latest/download/kube-proxy.yml | sed 's/VERSION/v1.18.0/g' | kubectl apply -f -
-sleep 30
+sudo -u vitaly kubectl apply -f kube-flannel.yml
+sleep 60
+sudo -u vitaly curl -L https://github.com/kubernetes-sigs/sig-windows-tools/releases/latest/download/kube-proxy.yml | sed 's/VERSION/v1.18.0/g' | sudo -u vitaly kubectl apply -f -
+sleep 40
 sudo -u vitaly kubectl apply -f https://github.com/kubernetes-sigs/sig-windows-tools/releases/latest/download/flannel-overlay.yml
-sleep 30
+sleep 40
+
+#patching
+wget https://raw.githubusercontent.com/sibich/publicscripts/master/node-selector-patch.yml
+wget https://raw.githubusercontent.com/sibich/publicscripts/master/win-node-selector-patch.yml
+sudo -u vitaly kubectl patch ds/kube-proxy --patch "$(cat node-selector-patch.yml)" -n=kube-system
+sleep 10
+sudo -u vitaly kubectl patch ds/kube-flannel-ds-amd64 --patch "$(cat node-selector-patch.yml)" -n=kube-system
+sleep 10
+sudo -u vitaly kubectl patch ds/kube-flannel-ds-windows-amd64 --patch "$(cat win-node-selector-patch.yml)" -n=kube-system
+sleep 10
 
 sudo -u vitaly kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
 sleep 30
