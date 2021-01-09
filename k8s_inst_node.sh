@@ -38,7 +38,7 @@ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
 sleep 10s
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
 apt-get update
-apt-get install -y kubeadm kubelet kubectl kubernetes-cni
+apt-get install -y kubeadm=1.18.2-00 kubelet=1.18.2-00 kubectl=1.18.2-00 kubernetes-cni
 apt-mark hold kubelet kubeadm kubectl
 
 kubeadmver=$(kubeadm version)

@@ -8,7 +8,7 @@ echo "Current user is $user, working in $folder folder" >> /home/vitaly/kube_set
 #prerequisites
 apt-get update
 apt-get upgrade -y
-apt-get install -y apt-transport-https curl ca-certificates gnupg2 software-properties-common
+apt-get install -y apt-transport-https curl ca-certificates gnupg2 software-properties-common hyperv-daemons
 
 #disabling swap
 swapoff -a
@@ -16,6 +16,7 @@ sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
 #enable bridge-netfilter
 modprobe br_netfilter
+sysctl net.bridge.bridge-nf-call-iptables=1
 
 #install docker
 curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
@@ -32,7 +33,7 @@ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
 sleep 10s
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
 apt-get update
-apt-get install -y kubeadm kubelet kubectl kubernetes-cni
+apt-get install -y kubeadm=1.18.2-00 kubelet=1.18.2-00 kubectl=1.18.2-00
 apt-mark hold kubelet kubeadm kubectl
 
 kubeadmver=$(kubeadm version)
@@ -46,7 +47,7 @@ EOF'
 
 #some variables
 POD_NETWORK_CIDR="10.244.0.0/16"
-APISERVER_ADVERTISE_ADDRESS="172.16.1.1"
+APISERVER_ADVERTISE_ADDRESS="192.168.2.40"
 SERVICE_CIDR="10.96.0.0/12"
 
 systemctl restart docker
@@ -61,9 +62,9 @@ chown vitaly:vitaly /home/vitaly/.kube/config
 wget https://raw.githubusercontent.com/sibich/publicscripts/master/kube-flannel.yml
 sudo -u vitaly kubectl apply -f kube-flannel.yml
 sleep 60
-sudo -u vitaly curl -L https://github.com/kubernetes-sigs/sig-windows-tools/releases/latest/download/kube-proxy.yml | sed 's/VERSION/v1.18.0/g' | sudo -u vitaly kubectl apply -f -
+sudo -u vitaly kubectl create -f https://raw.githubusercontent.com/sibich/publicscripts/master/kube-proxy.yml
 sleep 40
-sudo -u vitaly kubectl apply -f https://github.com/kubernetes-sigs/sig-windows-tools/releases/latest/download/flannel-overlay.yml
+sudo -u vitaly kubectl create -f https://raw.githubusercontent.com/sibich/publicscripts/master/flannel-overlay.yml
 sleep 40
 
 #patching
