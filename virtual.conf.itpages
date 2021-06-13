@@ -1,5 +1,5 @@
 server {
-    server_name itpages.pp.ua www.itpages.pp.ua;
+    server_name itpages.pp.ua www.itpages.pp.ua media.itpages.pp.ua;
     root /usr/share/nginx/html/pages; ## <-- Your only path reference.
 
     location = /favicon.ico {
@@ -12,8 +12,6 @@ server {
         log_not_found off;
         access_log off;
     }
-    listen 80;
-    listen [::]:80;
     listen 443 ssl http2;
     #ssl on;
     ssl_certificate_key /etc/letsencrypt/live/itpages.pp.ua/privkey.pem; # managed by Certbot
@@ -97,6 +95,34 @@ server {
         expires max;
         log_not_found off;
     }
+
+
+
+
+
+
+
+}
+server {
+    if ($host = www.itpages.pp.ua) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    if ($host = media.itpages.pp.ua) {
+        return 301 https://$host$request_uri;
+    } 
+    
+    if ($host = itpages.pp.ua) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name itpages.pp.ua www.itpages.pp.ua media.itpages.pp.ua;
+    listen 80;
+    listen [::]:80;
+    return 404; # managed by Certbot
+
+
 
 
 }

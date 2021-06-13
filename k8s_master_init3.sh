@@ -80,5 +80,5 @@ apt-get -y install iptables-persistent
 cat /etc/iptables/rules.v4 >> /home/vitaly/router_setup.log
 
 #configure /etc/hosts
-echo "172.16.2.20	node21-vm.cluster.home	node21-vm" >> /etc/hosts
-echo "172.16.2.21   node22-vm.cluster.home  node22-vm" >> /etc/hosts
+echo "172.16.2.20	node1.cluster.home	node1" >> /etc/hosts
+echo "172.16.2.21   node2.cluster.home  node2" >> /etc/hosts
